@@ -1,10 +1,35 @@
 <!doctype html>
 <html>
 <head>
-    <title></title>
+    <title>My Imageboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+    <h1>My Imagebord</h1>
+
+    <!-- This container is for our VUE instance! -->
+    <div id ="main">
+        <!-- <h2>Hi {{name}} , you are key-value-pair to data's name..</h2>
+        <h2> 10*2 = {{10 *2}}</h2>
+        <h2>Name capitalized: {{ name.toUpperCase() }}</h2>
+
+        <h3 v-if = "seen"> You can see me!!</h3>
+        <h3 v-else = "seen"> Seen is falsey INSIDE data if you can see this</h3> -->
+
+       
+            
+    <div v-for="each in getImageAndTitle" class="frame">
+                
+    <img :src="each.url" alt="image"/>
+        <div class="caption">
+        <p>«{{ each.title }}»</p>
+        </div>
+    </div>
+        
+   
+    </div>
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
