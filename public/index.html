@@ -9,24 +9,29 @@
 
     <!-- This container is for our VUE instance! -->
     <div id ="main">
-        <!-- <h2>Hi {{name}} , you are key-value-pair to data's name..</h2>
-        <h2> 10*2 = {{10 *2}}</h2>
-        <h2>Name capitalized: {{ name.toUpperCase() }}</h2>
+    
+        <div class="form-container">
+        <form>
+            <input v-model="title" type="text" name="title" placeholder="title"/>
+            <input v-model ="description" type="text" name="description" placeholder="description"/>
+            <input v-model="username" type="text" name="username" placeholder="username"/>
 
-        <h3 v-if = "seen"> You can see me!!</h3>
-        <h3 v-else = "seen"> Seen is falsey INSIDE data if you can see this</h3> -->
+            <input class="file-upload" @change="handleChange" type="file" name="file" accept="image/*"/>
 
-       
-            
-    <div v-for="each in getImageAndTitle" class="frame">
-                
-    <img :src="each.url" alt="image"/>
-        <div class="caption">
-        <p>«{{ each.title }}»</p>
+            <button @click="handleClick">Submit</button>
+        </form>
         </div>
-    </div>
-        
+    
+    <div class="container">
+    <div v-for="each in images" class="frame">
+                
+    <img :src="each.url" alt="image">
+        <div class="caption">
+        <p>«{{ each.title }}» <br> {{ each.description }}</p>
+        </div>
    
+    </div>
+    </div>
     </div>
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>

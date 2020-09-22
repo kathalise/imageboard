@@ -7,7 +7,11 @@
         data: {
             // name: "Masala",
             // seen: false,
-            getImageAndTitle: [],
+            images: [],
+            title: "",
+            description: "",
+            username: "",
+            file: null,
         }, // data ends
 
         //this runs when our VUE instance renders
@@ -26,7 +30,7 @@
                     console.log("response from /images", res.data);
                     // console.log("this INSIDE axios", self);
 
-                    self.getImageAndTitle = res.data;
+                    self.images = res.data;
                 })
                 .catch(function (err) {
                     console.log("err in axios /images", err);
@@ -36,8 +40,32 @@
         // here ALL of our functions go!!!
         // no arrow-functions and no jquery
         methods: {
-            myFunction: function (arg) {
-                console.log("myFunction is running!!!", arg);
+            handleClick: function (e) {
+                e.preventDefault();
+                // console.log("my properties in data with this", this);
+                var formData = new FormData();
+
+                formData.append("title", this.title);
+                formData.append("description", this.description);
+                formData.append("username", this.username);
+                formData.append("file", this.file);
+
+                var self = this;
+                axios
+                    .post("/upload", formData)
+                    .then(function (res) {
+                        console.log("res from POST /upload", res);
+                        self.images.unshift(res.data);
+                    })
+                    .catch(function (err) {
+                        console.log("err in /upload", err);
+                    });
+            },
+            handleChange: function (e) {
+                // console.log("handleChange is running!");
+                // console.log("file:", e.target.files[0]);
+
+                this.file = e.target.files[0];
             },
         }, //methods ends
     });
