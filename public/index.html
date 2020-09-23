@@ -25,14 +25,37 @@
     <div class="container">
     <div v-for="each in images" class="frame">
                 
-    <img :src="each.url" alt="image">
+    <img :src="each.url" alt="image" @click="showModal(each.id)">
         <div class="caption">
         <p>«{{ each.title }}» <br> {{ each.description }}</p>
         </div>
    
     </div>
     </div>
+
+
+    <my-modal v-if="id" :id ="id" @close="closeMe"></my-modal>
     </div>
+
+    <script id="modal-template" type="text/x-template">
+    <div class="overlay">
+    <div class="component">
+        <h3>«{{ title}}», {{ description }} by <em>{{ username }}</h3>
+    <div class="inside-component">    
+    <div class="smallImageContainer">
+            <img clas="small-img" :src="url">
+        </div>
+    <p id="close" @click="closeModal">close</p>
+    <form>
+    <input v-model="username" type="text" name="username" placeholder="username"/>
+    <input textare v-model="comment" type="text" name="comment" placeholder="leave a comment"/>
+    <button @click="handleAddComment">Submit</button>
+    </form>
+    </div>
+    </div>
+    </div>
+    </script>
+
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="js/script.js"></script>

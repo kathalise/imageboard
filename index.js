@@ -33,10 +33,10 @@ app.use(express.json());
 app.get("/images", (req, res) => {
     db.getImage()
         .then((result) => {
-            console.log(
-                "SOMETHING IS HAPPENING INSIDE getImageAndTitle",
-                result
-            );
+            // console.log(
+            //     "SOMETHING IS HAPPENING INSIDE getImageAndTitle",
+            //     result
+            // );
             res.json(result.rows);
         })
         .catch((err) => {
@@ -65,4 +65,42 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
             res.sendStatus(500);
         });
 });
+
+//////// get Image for Modal ////////
+app.get("/image/:image_id", (req, res) => {
+    // console.log("INSIDE /image/:modal");
+    console.log("req.params.image_id :", req.params.image_id);
+    db.getImageById(req.params.image_id)
+        .then((result) => {
+            console.log("getImageById result.rows[0]: ", result.rows[0]);
+            res.json(result.rows[0]);
+        })
+        .catch((err) => {
+            console.log("ERR in getImageById", err);
+        });
+});
+
+//////// add comment via Modal ////////
+app.post("/comment", (req, res) => {
+    const comment = req.body.comment;
+    const username = req.body.username;
+    const image_id = req.body.image_id;
+
+    db.addComment(comment, username, image_id)
+        .then((result) => {
+            console.log("result in addComment", result);
+            res.json(result.rows);
+        })
+        .catch((err) => {
+            console.log("err in adding comment", err);
+        });
+});
+
+app.get("/comment", (req, res) => {
+    console.log("inside GET comment");
+    db.getComment(req.body.image_id).then((result) => {
+        res.json(result.rows);
+    });
+});
+
 app.listen(8080, () => console.log("IB server is listening"));
