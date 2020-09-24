@@ -69,10 +69,10 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
 //////// get Image for Modal ////////
 app.get("/image/:image_id", (req, res) => {
     // console.log("INSIDE /image/:modal");
-    console.log("req.params.image_id :", req.params.image_id);
+    // console.log("req.params.image_id :", req.params.image_id);
     db.getImageById(req.params.image_id)
         .then((result) => {
-            console.log("getImageById result.rows[0]: ", result.rows[0]);
+            // console.log("getImageById result.rows[0]: ", result.rows[0]);
             res.json(result.rows[0]);
         })
         .catch((err) => {
@@ -84,21 +84,22 @@ app.get("/image/:image_id", (req, res) => {
 app.post("/comment", (req, res) => {
     const comment = req.body.comment;
     const username = req.body.username;
-    const image_id = req.body.image_id;
+    const id = req.body.id;
 
-    db.addComment(comment, username, image_id)
-        .then((result) => {
-            console.log("result in addComment", result);
-            res.json(result.rows);
+    db.addComment(comment, username, id)
+        .then((data) => {
+            console.log("result in addComment", data);
+            res.json(data.rows[0]);
         })
         .catch((err) => {
             console.log("err in adding comment", err);
         });
 });
 
-app.get("/comment", (req, res) => {
+app.get("/comment/:image_id", (req, res) => {
     console.log("inside GET comment");
-    db.getComment(req.body.image_id).then((result) => {
+    db.getCommentById(req.params.image_id).then((result) => {
+        console.log("result: ", result.rows);
         res.json(result.rows);
     });
 });

@@ -9,7 +9,8 @@
                 url: "",
                 description: "",
                 username: "",
-                comments: null,
+                comment: "",
+                comments: "",
             };
         },
         template: "#modal-template",
@@ -32,6 +33,16 @@
                 .catch(function (err) {
                     console.log("err in axios /image/:modal", err);
                 });
+
+            axios
+                .get(`/comment/${id}`)
+                .then(function (res) {
+                    console.log("response from GET /comment", res.data);
+                    self.comments = res.data;
+                })
+                .catch((err) => {
+                    console.log("Err in GET /comment", err);
+                });
         },
         methods: {
             closeModal: function () {
@@ -39,10 +50,30 @@
                 console.log("about to emit an event from the component!!!");
                 this.$emit("close");
             },
+
+            addComment: function (e) {
+                // console.log("am I inside addComment??");
+                e.preventDefault();
+                var self = this;
+                var commentInfo = {
+                    username: self.username,
+                    comment: self.comment,
+                    id: self.id,
+                };
+
+                axios
+                    .post("/comment", commentInfo)
+                    .then(function (res) {
+                        console.log("res from POST /comment went throu", res);
+                    })
+                    .catch((err) => {
+                        console.log("error in addComment", err);
+                    });
+            },
         },
-        handleAddComment: function () {
-            console.log("Added comment!!");
-        },
+        // addComment: function () {
+        //     console.log("Added comment!!");
+        // },
     });
 
     new Vue({
@@ -119,10 +150,11 @@
 
             closeMe: function () {
                 console.log(
-                    "closeMe in the instance / parent is running! This was emitted from the component"
+                    "closeMe in the instance / parent is running! This was emitted from the component",
+                    this.id
                 );
-
-                // id = null;
+                var self = this;
+                self.id = null;
             },
         }, //methods ends
     });

@@ -40,18 +40,27 @@
     <script id="modal-template" type="text/x-template">
     <div class="overlay">
     <div class="component">
-        <h3>«{{ title}}», {{ description }} by <em>{{ username }}</h3>
+        <h3>«{{ title}}», {{ description }} by <em>{{ username }}</em></h3>
     <div class="inside-component">    
     <div class="smallImageContainer">
             <img clas="small-img" :src="url">
-        </div>
-    <p id="close" @click="closeModal">close</p>
+    </div>
+    <h1 class="closeX" @click="closeModal">close</h1>
     <form>
     <input v-model="username" type="text" name="username" placeholder="username"/>
-    <input textare v-model="comment" type="text" name="comment" placeholder="leave a comment"/>
-    <button @click="handleAddComment">Submit</button>
+    <input v-model="comment" type="text" name="comment" placeholder="leave a comment"/>
+    <button @click="addComment">Submit</button>
     </form>
-    </div>
+
+
+    
+</div>
+
+
+<div v-for="each in comments" class="commentbox">
+    <p> {{each.username}}</p>
+    <p> {{each.comment}}</p>
+</div>
     </div>
     </div>
     </script>

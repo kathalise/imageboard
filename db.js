@@ -27,14 +27,14 @@ module.exports.getImageById = (id) => {
 
 ///////////// comments /////////////
 
-module.exports.addComment = (comment, username, image_id) => {
+module.exports.addComment = (comment, username, id) => {
     const q = `INSERT INTO comments (comment, username, image_id) VALUES ($1, $2, $3) RETURNING *;`;
-    const params = [comment, username, image_id];
+    const params = [comment, username, id];
     return db.query(q, params);
 };
 
-module.exports.getComment = (image_id) => {
+module.exports.getCommentById = (id) => {
     const q = `SELECT * FROM comments WHERE image_id=$1`;
-    const params = [image_id];
+    const params = [id];
     return db.query(q, params);
 };
