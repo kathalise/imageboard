@@ -10,7 +10,7 @@
                 description: "",
                 username: "",
                 comment: "",
-                comments: "",
+                comments: [],
             };
         },
         template: "#modal-template",
@@ -65,15 +65,15 @@
                     .post("/comment", commentInfo)
                     .then(function (res) {
                         console.log("res from POST /comment went throu", res);
+                        self.comment = null;
+                        // self.username = "";
+                        self.comments.push(res.data);
                     })
                     .catch((err) => {
                         console.log("error in addComment", err);
                     });
             },
         },
-        // addComment: function () {
-        //     console.log("Added comment!!");
-        // },
     });
 
     new Vue({
@@ -85,7 +85,7 @@
             description: "",
             username: "",
             file: null,
-            id: null,
+            id: location.hash.slice(1),
         }, // data ends
 
         //this runs when our VUE instance renders
@@ -124,6 +124,12 @@
                 formData.append("username", this.username);
                 formData.append("file", this.file);
 
+                /// empty input fields without refresh ///
+                this.title = null;
+                this.description = null;
+                this.username = null;
+                this.file = null;
+
                 var self = this;
                 axios
                     .post("/upload", formData)
@@ -135,6 +141,47 @@
                         console.log("err in /upload", err);
                     });
             },
+
+            loadMoreImages: function () {
+                var self = this;
+                var arrLength = self.images.length;
+                var oldest_id = self.images[arrLength - 1].id;
+                console.log(
+                    "INSIDE self.images.length, arrLength: ",
+                    arrLength
+                );
+                console.log(
+                    "INSIDE self.images[inTotal - 1].id",
+                    self.images[arrLength - 1].id
+                );
+                // if (this.moreImagesToLoad) {
+                //     return;
+                // }
+                // this.moreImagesToLoad = true;
+                axios
+                    .get(`/moreImages/${oldest_id}`)
+                    .then(function (res) {
+                        // self.moreImagesToLoad = false;
+                        for (var i = 0; i < res.data.length; i++) {
+                            // console.log("res.data.length: ", res.data.length);
+                            self.images.push(res.data[i]);
+                        }
+                        if (self.images[arrLength].id < arrLength - 1) {
+                            console.log("THIS IS THE END");
+                            var loadMoreButton = document.getElementById(
+                                "more"
+                            );
+                            loadMoreButton.style.display = "none";
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(
+                            "err in GET /images/oldest_id loading more images",
+                            err
+                        );
+                    });
+            },
+
             handleChange: function (e) {
                 // console.log("handleChange is running!");
                 // console.log("file:", e.target.files[0]);

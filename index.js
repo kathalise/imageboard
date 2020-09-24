@@ -104,4 +104,20 @@ app.get("/comment/:image_id", (req, res) => {
     });
 });
 
+//////////// get MORE images to load route ////////////
+app.get("/moreImages/:oldest_id", (req, res) => {
+    console.log(" oldest ID in GET /images/:oldest_id: ", req.params.oldest_id);
+    db.getMoreImages(req.params.oldest_id)
+        .then((result) => {
+            console.log(
+                "SOMETHING IS HAPPENING INSIDE getMoreImages: ",
+                result.rows
+            );
+            res.json(result.rows);
+        })
+        .catch((err) => {
+            console.log("This something inside getMoreImages didn't work", err);
+        });
+});
+
 app.listen(8080, () => console.log("IB server is listening"));

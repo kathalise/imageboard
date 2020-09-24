@@ -12,9 +12,9 @@
     
         <div class="form-container">
         <form>
-            <input v-model="title" type="text" name="title" placeholder="title"/>
-            <input v-model ="description" type="text" name="description" placeholder="description"/>
-            <input v-model="username" type="text" name="username" placeholder="username"/>
+            <input v-model="title" type="text" name="title" placeholder="Title"/>
+            <input v-model ="description" type="text" name="description" placeholder="Description"/>
+            <input v-model="username" type="text" name="username" placeholder="Username"/>
 
             <input class="file-upload" @change="handleChange" type="file" name="file" accept="image/*"/>
 
@@ -27,10 +27,11 @@
                 
     <img :src="each.url" alt="image" @click="showModal(each.id)">
         <div class="caption">
-        <p>«{{ each.title }}» <br> {{ each.description }}</p>
+        <p>{{ each.description }}</p>
         </div>
    
     </div>
+    <button id="more" @click="loadMoreImages">More</button>
     </div>
 
 
@@ -40,15 +41,15 @@
     <script id="modal-template" type="text/x-template">
     <div class="overlay">
     <div class="component">
-        <h3>«{{ title}}», {{ description }} by <em>{{ username }}</em></h3>
-    <div class="inside-component">    
+        <div class="inside-component">    
+            <h3>«{{title}}» <br> {{ description }} by <em>{{ username }}</em></h3>
     <div class="smallImageContainer">
             <img clas="small-img" :src="url">
     </div>
-    <h1 class="closeX" @click="closeModal">close</h1>
+    <h1 class="closeX" @click="closeModal">✕</h1>
     <form>
-    <input v-model="username" type="text" name="username" placeholder="username"/>
-    <input v-model="comment" type="text" name="comment" placeholder="leave a comment"/>
+    <input v-model="username" type="text" name="username" placeholder="Username"/>
+    <input v-model="comment" type="text" name="comment" placeholder="Leave a comment"/>
     <button @click="addComment">Submit</button>
     </form>
 
@@ -56,10 +57,10 @@
     
 </div>
 
-
+<div class ="commentbox-container">
 <div v-for="each in comments" class="commentbox">
-    <p> {{each.username}}</p>
-    <p> {{each.comment}}</p>
+    <p> <em>{{each.username}}:</em> «{{each.comment}}»</p>
+</div>
 </div>
     </div>
     </div>

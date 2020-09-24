@@ -7,9 +7,19 @@ const db = spicedPg(
 ///////////// images /////////////
 
 module.exports.getImage = () => {
-    const q = `SELECT * FROM images ORDER BY id DESC`;
-
+    const q = `SELECT * FROM images 
+    ORDER BY id DESC
+    LIMIT 3`;
     return db.query(q);
+};
+
+module.exports.getMoreImages = (oldest_id) => {
+    const q = `SELECT * FROM images
+        WHERE id < $1
+        ORDER BY id DESC
+        LIMIT 3`;
+    const params = [oldest_id];
+    return db.query(q, params);
 };
 
 module.exports.addImage = (title, username, description, file) => {
