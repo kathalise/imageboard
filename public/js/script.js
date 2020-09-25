@@ -9,6 +9,7 @@
                 url: "",
                 description: "",
                 username: "",
+                // usernameComment: "",
                 comment: "",
                 comments: [],
             };
@@ -18,17 +19,20 @@
 
         mounted: function () {
             console.log("props:", this.id);
-            const id = this.id;
             var self = this;
+            const id = self.id;
             axios
                 .get(`/image/${id}`)
                 .then(function (res) {
                     console.log("response from GET /image/:modal", res.data);
-
-                    self.title = res.data.title;
-                    self.url = res.data.url;
-                    self.description = res.data.description;
-                    self.username = res.data.username;
+                    if (res.data.id == undefined) {
+                        self.closeModal();
+                    } else {
+                        self.title = res.data.title;
+                        self.url = res.data.url;
+                        self.description = res.data.description;
+                        self.username = res.data.username;
+                    }
                 })
                 .catch(function (err) {
                     console.log("err in axios /image/:modal", err);
@@ -37,7 +41,7 @@
             axios
                 .get(`/comment/${id}`)
                 .then(function (res) {
-                    console.log("response from GET /comment", res.data);
+                    // console.log("response from GET /comment", res.data);
                     self.comments = res.data;
                 })
                 .catch((err) => {
@@ -47,7 +51,6 @@
         methods: {
             closeModal: function () {
                 // console.log("closeModal runs!!!");
-                console.log("about to emit an event from the component!!!");
                 this.$emit("close");
             },
 
@@ -64,13 +67,50 @@
                 axios
                     .post("/comment", commentInfo)
                     .then(function (res) {
-                        console.log("res from POST /comment went throu", res);
-                        self.comment = null;
-                        // self.username = "";
+                        // console.log("res from POST /comment went throu", res.data);
                         self.comments.push(res.data);
+                        self.comment = null;
+                        self.username = null;
                     })
                     .catch((err) => {
                         console.log("error in addComment", err);
+                    });
+            },
+        },
+        watch: {
+            checkImageId: function () {
+                console.log("change in prop", this.id);
+                var self = this;
+                const id = self.id;
+
+                axios
+                    .get(`/image/${id}`)
+                    .then(function (res) {
+                        console.log(
+                            "response from GET /image/:modal",
+                            res.data
+                        );
+                        if (res.data.id == undefined) {
+                            self.closeModal();
+                        } else {
+                            self.title = res.data.title;
+                            self.url = res.data.url;
+                            self.description = res.data.description;
+                            self.username = res.data.username;
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log("err in axios /image/:modal", err);
+                    });
+
+                axios
+                    .get(`/comment/${id}`)
+                    .then(function (res) {
+                        // console.log("response from GET /comment", res.data);
+                        self.comments = res.data;
+                    })
+                    .catch((err) => {
+                        console.log("Err in GET /comment", err);
                     });
             },
         },
@@ -96,7 +136,12 @@
             // talking to my server (index.js)
 
             var self = this;
-            console.log("this OUTSIDE axios", this);
+            // console.log("this OUTSIDE axios", this);
+
+            addEventListener("hashchange", function () {
+                console.log("hashchange is happening");
+                self.id = location.hash.slice(1);
+            });
 
             axios
                 .get("/images")
@@ -154,14 +199,9 @@
                     "INSIDE self.images[inTotal - 1].id",
                     self.images[arrLength - 1].id
                 );
-                // if (this.moreImagesToLoad) {
-                //     return;
-                // }
-                // this.moreImagesToLoad = true;
                 axios
                     .get(`/moreImages/${oldest_id}`)
                     .then(function (res) {
-                        // self.moreImagesToLoad = false;
                         for (var i = 0; i < res.data.length; i++) {
                             // console.log("res.data.length: ", res.data.length);
                             self.images.push(res.data[i]);
@@ -202,6 +242,10 @@
                 );
                 var self = this;
                 self.id = null;
+
+                location.hash = "";
+                /// to delete hash not allowed to ask questions!
+                history.replaceState(null, null, " ");
             },
         }, //methods ends
     });

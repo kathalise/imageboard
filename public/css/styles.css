@@ -90,17 +90,17 @@ button:hover {
     display: flex;
     flex-direction: column;
     justify-content: right;
+    cursor: pointer;
 
     padding: 4px;
     margin-bottom: 30px;
 }
 
-.frame > img {
-    width: inherit;
+.frame > a > img {
+    width: 380px;
     height: 310px;
     object-fit: cover;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 .caption {
@@ -108,6 +108,11 @@ button:hover {
     color: rgb(139, 27, 98);
     text-align: center;
     font-size: 15px;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
 }
 
 /* ////////////// MODAL ////////////// */

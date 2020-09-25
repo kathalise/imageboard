@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
 <head>
-    <title>My Imageboard</title>
+    <title> 🏗 🏗 🏗 </title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>My Imagebord</h1>
+    <h1>BuiltBoard</h1>
 
     <!-- This container is for our VUE instance! -->
     <div id ="main">
@@ -24,12 +24,13 @@
     
     <div class="container">
     <div v-for="each in images" class="frame">
+        <a :href="'#' + each.id">
                 
-    <img :src="each.url" alt="image" @click="showModal(each.id)">
-        <div class="caption">
-        <p>{{ each.description }}</p>
-        </div>
-   
+        <img :src="each.url" alt="image">
+            <div class="caption">
+            <p>{{ each.description }} @<em>{{ each.username }}</em></p>
+            </div>
+        </a>
     </div>
     <button id="more" @click="loadMoreImages">More</button>
     </div>
@@ -42,14 +43,16 @@
     <div class="overlay">
     <div class="component">
         <div class="inside-component">    
-            <h3>«{{title}}» <br> {{ description }} by <em>{{ username }}</em></h3>
+            <h3>«{{title}}» <br> {{ description }}
+                
+            </h3>
     <div class="smallImageContainer">
             <img clas="small-img" :src="url">
     </div>
     <h1 class="closeX" @click="closeModal">✕</h1>
     <form>
-    <input v-model="username" type="text" name="username" placeholder="Username"/>
-    <input v-model="comment" type="text" name="comment" placeholder="Leave a comment"/>
+    <input v-model="username" type="text" name="username" placeholder="Username" required/>
+    <input v-model="comment" type="text" name="comment" placeholder="Leave a comment" required/>
     <button @click="addComment">Submit</button>
     </form>
 
