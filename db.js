@@ -13,12 +13,15 @@ module.exports.getImage = () => {
     return db.query(q);
 };
 
-module.exports.getMoreImages = (oldest_id) => {
-    const q = `SELECT * FROM images
+module.exports.getMoreImages = (highest_id) => {
+    const q = ` SELECT *, (
+        SELECT id FROM images
+        ORDER BY id ASC
+        LIMIT 1) AS "lowestId" FROM images
         WHERE id < $1
         ORDER BY id DESC
         LIMIT 3`;
-    const params = [oldest_id];
+    const params = [highest_id];
     return db.query(q, params);
 };
 
@@ -45,6 +48,20 @@ module.exports.addComment = (comment, username, id) => {
 
 module.exports.getCommentById = (id) => {
     const q = `SELECT * FROM comments WHERE image_id=$1`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+///////////// delete image /////////////
+
+module.exports.deleteImageId = (id) => {
+    const q = `DELETE FROM images WHERE id = ($1)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+module.exports.deleteAllComments = (id) => {
+    const q = `DELETE FROM comments WHERE image_id = ($1)`;
     const params = [id];
     return db.query(q, params);
 };

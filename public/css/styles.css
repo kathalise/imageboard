@@ -234,6 +234,8 @@ a {
     height: inherit;
     width: 40%;
     margin-top: 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .commentbox {
@@ -248,6 +250,23 @@ a {
     border-radius: 5px;
     padding-left: 10px;
     padding-top: 5px;
+}
+
+#delete {
+    background-color: rgb(9, 6, 8);
+    color: grey;
+    align-self: flex-end;
+    bottom: 5px;
+    right: 70px;
+    position: absolute;
+    width: 10%;
+    height: 5%;
+    box-shadow: none;
+}
+
+#delete:hover {
+    background-color: rgba(189, 236, 210, 0.692);
+    color: black;
 }
 
 .more {

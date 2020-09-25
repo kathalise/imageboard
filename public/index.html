@@ -36,7 +36,7 @@
     </div>
 
 
-    <my-modal v-if="id" :id ="id" @close="closeMe"></my-modal>
+    <my-modal v-if="id" :id ="id" @close="closeMe" @delete="deleteMe" @delete-comment="deleteComments"></my-modal>
     </div>
 
     <script id="modal-template" type="text/x-template">
@@ -63,7 +63,10 @@
 <div class ="commentbox-container">
 <div v-for="each in comments" class="commentbox">
     <p> <em>{{each.username}}:</em> «{{each.comment}}»</p>
+    <button id="deleteComments" @click="deleteComments">Delete Comments</button>
 </div>
+</div>
+<button id="delete" @click="deleteImage">Delete Image</button>
 </div>
     </div>
     </div>

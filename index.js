@@ -105,9 +105,9 @@ app.get("/comment/:image_id", (req, res) => {
 });
 
 //////////// get MORE images to load route ////////////
-app.get("/moreImages/:oldest_id", (req, res) => {
-    console.log(" oldest ID in GET /images/:oldest_id: ", req.params.oldest_id);
-    db.getMoreImages(req.params.oldest_id)
+app.get("/moreImages/:highest_id", (req, res) => {
+    console.log(" Hello FROM GET /images/:highest_id: ", req.params.highest_id);
+    db.getMoreImages(req.params.highest_id)
         .then((result) => {
             console.log(
                 "SOMETHING IS HAPPENING INSIDE getMoreImages: ",
@@ -117,6 +117,46 @@ app.get("/moreImages/:oldest_id", (req, res) => {
         })
         .catch((err) => {
             console.log("This something inside getMoreImages didn't work", err);
+        });
+});
+
+//////////// DELETE IMAGE ////////////
+
+app.post("/delete/:image_id", (req, res) => {
+    // console.log("INSIDE delete SERVER", req.params.image_id, res);
+
+    db.deleteAllComments(req.params.image_id)
+        .then(
+            db
+                .deleteImageId(req.params.image_id)
+                .then((result) => {
+                    console.log(
+                        "inside THEN of deleteImageId, result.rows: ",
+                        result.rows
+                    );
+                    res.json();
+                })
+                .catch((err) => {
+                    console.log("Inside catch err of deleteImageId", err);
+                })
+        )
+        .catch((err) => {
+            console.log("Inside catch err of deleteAllComments", err);
+        });
+});
+
+//////////// DELETE COMMENTS ////////////
+
+app.post("/deleteComments/:image_id", (req, res) => {
+    // console.log("INSIDE delete SERVER", req.params.image_id, res);
+
+    db.deleteAllComments(req.params.image_id)
+        .then((result) => {
+            console.log("INSIDE deleteAllComments result.rows: ", result);
+            res.json();
+        })
+        .catch((err) => {
+            console.log("Inside catch err of deleteAllComments", err);
         });
 });
 

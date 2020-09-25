@@ -54,6 +54,16 @@
                 this.$emit("close");
             },
 
+            deleteImage: function () {
+                console.log("deleteImage runs!!!");
+                this.$emit("delete");
+            },
+
+            deleteComments: function () {
+                console.log("deleteComments runs!!!");
+                this.$emit("delete-comment");
+            },
+
             addComment: function (e) {
                 // console.log("am I inside addComment??");
                 e.preventDefault();
@@ -190,7 +200,8 @@
             loadMoreImages: function () {
                 var self = this;
                 var arrLength = self.images.length;
-                var oldest_id = self.images[arrLength - 1].id;
+                var highest_id = self.images[arrLength - 1].id;
+                console.log("highest_id: ", highest_id);
                 console.log(
                     "INSIDE self.images.length, arrLength: ",
                     arrLength
@@ -200,10 +211,10 @@
                     self.images[arrLength - 1].id
                 );
                 axios
-                    .get(`/moreImages/${oldest_id}`)
+                    .get(`/moreImages/${highest_id}`)
                     .then(function (res) {
                         for (var i = 0; i < res.data.length; i++) {
-                            // console.log("res.data.length: ", res.data.length);
+                            console.log("res.data.length: ", res.data.length);
                             self.images.push(res.data[i]);
                         }
                         if (self.images[arrLength].id < arrLength - 1) {
@@ -246,6 +257,42 @@
                 location.hash = "";
                 /// to delete hash not allowed to ask questions!
                 history.replaceState(null, null, " ");
+            },
+
+            deleteMe: function () {
+                var self = this;
+                const id = self.id;
+                console.log("INSIDE DELETING FUNCTION");
+
+                axios
+                    .post(`/delete/${id}`)
+                    .then(function (res) {
+                        console.log("INSIDE POST /delete image", res.data);
+                        self.id = null;
+                    })
+                    .catch(function (err) {
+                        console.log("err in POST /delete image", err);
+                    });
+            },
+
+            deleteComments: function () {
+                var self = this;
+                const id = self.id;
+
+                console.log("INSIDE DELETING COMMENTS FUNCTION");
+
+                axios
+                    .post(`/deleteComments/${id}`)
+                    .then(function (res) {
+                        console.log(
+                            "INSIDE POST /delete comments + res.data + ID",
+                            res.data
+                        );
+                        self.closeMe();
+                    })
+                    .catch((err) => {
+                        console.log("err in catch blcok deleteMeComments", err);
+                    });
             },
         }, //methods ends
     });
