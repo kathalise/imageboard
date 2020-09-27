@@ -20,7 +20,7 @@ module.exports.getMoreImages = (highest_id) => {
         LIMIT 1) AS "lowestId" FROM images
         WHERE id < $1
         ORDER BY id DESC
-        LIMIT 3`;
+        LIMIT 6`;
     const params = [highest_id];
     return db.query(q, params);
 };
@@ -55,13 +55,13 @@ module.exports.getCommentById = (id) => {
 ///////////// delete image /////////////
 
 module.exports.deleteImageId = (id) => {
-    const q = `DELETE FROM images WHERE id = ($1)`;
+    const q = `DELETE FROM images WHERE id = $1 RETURNING id`;
     const params = [id];
     return db.query(q, params);
 };
 
 module.exports.deleteAllComments = (id) => {
-    const q = `DELETE FROM comments WHERE image_id = ($1)`;
+    const q = `DELETE FROM comments WHERE image_id = $1`;
     const params = [id];
     return db.query(q, params);
 };

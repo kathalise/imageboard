@@ -56,12 +56,16 @@
 
             deleteImage: function () {
                 console.log("deleteImage runs!!!");
-                this.$emit("delete");
+                var self = this;
+                var id = self.id;
+                self.$emit("delete", id);
             },
 
             deleteComments: function () {
+                var self = this;
+                var id = self.id;
                 console.log("deleteComments runs!!!");
-                this.$emit("delete-comment");
+                this.$emit("delete-comment", id);
             },
 
             addComment: function (e) {
@@ -183,7 +187,7 @@
                 this.title = null;
                 this.description = null;
                 this.username = null;
-                this.file = null;
+                this.file = "";
 
                 var self = this;
                 axios
@@ -195,6 +199,12 @@
                     .catch(function (err) {
                         console.log("err in /upload", err);
                     });
+            },
+            handleChange: function (e) {
+                // console.log("handleChange is running!");
+                // console.log("file:", e.target.files[0]);
+
+                this.file = e.target.files[0];
             },
 
             loadMoreImages: function () {
@@ -213,16 +223,20 @@
                 axios
                     .get(`/moreImages/${highest_id}`)
                     .then(function (res) {
-                        for (var i = 0; i < res.data.length; i++) {
-                            console.log("res.data.length: ", res.data.length);
-                            self.images.push(res.data[i]);
-                        }
-                        if (self.images[arrLength].id < arrLength - 1) {
+                        if (
+                            res.data[res.data.length - 1].id ==
+                            res.data[res.data.length - 1].lowestId
+                        ) {
                             console.log("THIS IS THE END");
                             var loadMoreButton = document.getElementById(
                                 "more"
                             );
                             loadMoreButton.style.display = "none";
+                        }
+
+                        for (var i = 0; i < res.data.length; i++) {
+                            console.log("res.data.length: ", res.data.length);
+                            self.images.push(res.data[i]);
                         }
                     })
                     .catch(function (err) {
@@ -231,13 +245,6 @@
                             err
                         );
                     });
-            },
-
-            handleChange: function (e) {
-                // console.log("handleChange is running!");
-                // console.log("file:", e.target.files[0]);
-
-                this.file = e.target.files[0];
             },
 
             showModal: function (id) {
@@ -259,25 +266,36 @@
                 history.replaceState(null, null, " ");
             },
 
-            deleteMe: function () {
+            deleteMe: function (id) {
                 var self = this;
-                const id = self.id;
+                // const id = self.id;
                 console.log("INSIDE DELETING FUNCTION");
 
                 axios
                     .post(`/delete/${id}`)
                     .then(function (res) {
-                        console.log("INSIDE POST /delete image", res.data);
-                        self.id = null;
+                        console.log("INSIDE POST /delete image id: ", res.data);
+                        for (var i = 0; i < self.images.length; i++) {
+                            if (self.images[i].id === res.data) {
+                                var indexImagesArr = self.images.indexOf(
+                                    self.images[i]
+                                );
+                                console.log("indexImagesArr: ", indexImagesArr);
+                                if (indexImagesArr > -1) {
+                                    self.images.splice(indexImagesArr, 1);
+                                }
+                            }
+                        }
+                        self.closeMe();
                     })
                     .catch(function (err) {
                         console.log("err in POST /delete image", err);
                     });
             },
 
-            deleteComments: function () {
+            deleteComments: function (id) {
                 var self = this;
-                const id = self.id;
+                // const id = self.id;
 
                 console.log("INSIDE DELETING COMMENTS FUNCTION");
 
@@ -285,7 +303,7 @@
                     .post(`/deleteComments/${id}`)
                     .then(function (res) {
                         console.log(
-                            "INSIDE POST /delete comments + res.data + ID",
+                            "INSIDE POST /delete comments + res.data",
                             res.data
                         );
                         self.closeMe();

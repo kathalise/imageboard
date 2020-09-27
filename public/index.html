@@ -12,8 +12,8 @@
     
         <div class="form-container">
         <form>
-            <input v-model="title" type="text" name="title" placeholder="Title"/>
-            <input v-model ="description" type="text" name="description" placeholder="Description"/>
+            <input v-model="title" type="text" name="title" placeholder="Building"/>
+            <input v-model ="description" type="text" name="description" placeholder="City"/>
             <input v-model="username" type="text" name="username" placeholder="Username"/>
 
             <input class="file-upload" @change="handleChange" type="file" name="file" accept="image/*"/>
@@ -28,7 +28,7 @@
                 
         <img :src="each.url" alt="image">
             <div class="caption">
-            <p>{{ each.description }} @<em>{{ each.username }}</em></p>
+            <p>{{ each.description }} <br></nr><em>© {{  each.username }}</em></p>
             </div>
         </a>
     </div>
@@ -51,8 +51,8 @@
     </div>
     <h1 class="closeX" @click="closeModal">✕</h1>
     <form>
-    <input v-model="username" type="text" name="username" placeholder="Username" required/>
-    <input v-model="comment" type="text" name="comment" placeholder="Leave a comment" required/>
+    <input v-model="username" type="text" name="username" placeholder="Username"/>
+    <input v-model="comment" type="text" name="comment" placeholder="Leave a comment"/>
     <button @click="addComment">Submit</button>
     </form>
 
@@ -62,8 +62,8 @@
 
 <div class ="commentbox-container">
 <div v-for="each in comments" class="commentbox">
-    <p> <em>{{each.username}}:</em> «{{each.comment}}»</p>
-    <button id="deleteComments" @click="deleteComments">Delete Comments</button>
+    <p class="time">{{each.created_at}}</p><p><em>{{each.username}}:</em> «{{each.comment}}»</p>
+    <button id="deleteComments" @click="deleteComments">Delete Comment</button>
 </div>
 </div>
 <button id="delete" @click="deleteImage">Delete Image</button>

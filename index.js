@@ -51,6 +51,7 @@ app.get("/images", (req, res) => {
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
     // console.log("file: ", req.file);
     // console.log("input: ", req.body);
+
     db.addImage(
         req.body.title,
         req.body.username,
@@ -85,10 +86,11 @@ app.post("/comment", (req, res) => {
     const comment = req.body.comment;
     const username = req.body.username;
     const id = req.body.id;
+    const date = req.body.created_at;
 
-    db.addComment(comment, username, id)
+    db.addComment(comment, username, id, date)
         .then((data) => {
-            console.log("result in addComment", data);
+            console.log("result in addComment", data.rows[0]);
             res.json(data.rows[0]);
         })
         .catch((err) => {
@@ -97,11 +99,15 @@ app.post("/comment", (req, res) => {
 });
 
 app.get("/comment/:image_id", (req, res) => {
-    console.log("inside GET comment");
-    db.getCommentById(req.params.image_id).then((result) => {
-        console.log("result: ", result.rows);
-        res.json(result.rows);
-    });
+    console.log("inside GET comment", req.params);
+    db.getCommentById(req.params.image_id)
+        .then((result) => {
+            console.log("result result.rows.id: ", result.rows);
+            res.json(result.rows);
+        })
+        .catch((err) => {
+            console.log("ERR in get comment", err);
+        });
 });
 
 //////////// get MORE images to load route ////////////
@@ -122,19 +128,19 @@ app.get("/moreImages/:highest_id", (req, res) => {
 
 //////////// DELETE IMAGE ////////////
 
-app.post("/delete/:image_id", (req, res) => {
-    // console.log("INSIDE delete SERVER", req.params.image_id, res);
-
-    db.deleteAllComments(req.params.image_id)
+app.post("/delete/:id", (req, res) => {
+    console.log("INSIDE delete SERVER", req.params.id);
+    const { id } = req.params;
+    db.deleteAllComments(id)
         .then(
             db
-                .deleteImageId(req.params.image_id)
+                .deleteImageId(id)
                 .then((result) => {
                     console.log(
-                        "inside THEN of deleteImageId, result.rows: ",
-                        result.rows
+                        "inside THEN of deleteImageId, result : ",
+                        result.rows[0].id
                     );
-                    res.json();
+                    res.json(result.rows[0].id);
                 })
                 .catch((err) => {
                     console.log("Inside catch err of deleteImageId", err);
@@ -144,16 +150,17 @@ app.post("/delete/:image_id", (req, res) => {
             console.log("Inside catch err of deleteAllComments", err);
         });
 });
-
 //////////// DELETE COMMENTS ////////////
 
 app.post("/deleteComments/:image_id", (req, res) => {
-    // console.log("INSIDE delete SERVER", req.params.image_id, res);
+    console.log("INSIDE delete comment SERVER", req.params.image_id);
+    var { image_id } = req.params;
+    // console.log("image_id: ", image_id);
 
-    db.deleteAllComments(req.params.image_id)
+    db.deleteAllComments(image_id)
         .then((result) => {
-            console.log("INSIDE deleteAllComments result.rows: ", result);
-            res.json();
+            console.log("INSIDE deleteAllComments result: ", result);
+            res.json(result.rows);
         })
         .catch((err) => {
             console.log("Inside catch err of deleteAllComments", err);

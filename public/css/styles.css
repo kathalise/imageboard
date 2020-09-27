@@ -118,7 +118,7 @@ a {
 /* ////////////// MODAL ////////////// */
 
 .overlay {
-    background-color: rgba(29, 27, 27, 0.9);
+    background-color: rgba(19, 18, 18, 0.95);
     width: 100%;
     height: 100%;
     position: fixed;
@@ -171,7 +171,7 @@ a {
 
 .inside-component > form > input {
     width: 80%;
-    height: 10%;
+    height: 20%;
     /* align-self: flex-end; */
 }
 .inside-component > form > input:first-child {
@@ -252,6 +252,23 @@ a {
     padding-top: 5px;
 }
 
+.commentbox #deleteComments {
+    display: none;
+}
+
+.commentbox:hover #deleteComments {
+    cursor: pointer;
+    display: block;
+    position: sticky;
+    box-shadow: none;
+}
+.time {
+    font-size: 8px;
+    margin-top: 0px;
+    float: right;
+    margin-right: 10px;
+}
+
 #delete {
     background-color: rgb(9, 6, 8);
     color: grey;
@@ -269,6 +286,9 @@ a {
     color: black;
 }
 
+/* #deleteComments:hover {
+    margin-left: 70%;
+} */
 .more {
     margin: 0;
 }
